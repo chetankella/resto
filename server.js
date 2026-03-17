@@ -13,20 +13,25 @@ const app = express();
 
 
 
-<<<<<<< HEAD
-app.use(cors({
-  origin: ['http://localhost:5173', "https://rajavaarivindhu1.netlify.app"],
-  credentials: true,
-}));
-=======
-const corsOptions = {
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-};
+const cors = require("cors");
 
-app.use(cors(corsOptions));
->>>>>>> 7b67471 (fix cors origin handling)
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://rajavaarivindhu1.netlify.app"
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true
+  })
+);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
